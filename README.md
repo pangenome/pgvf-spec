@@ -1,4 +1,4 @@
-# pangenome graph variation format (PGVF)
+# Pangenome Graph Variation Format (PGVF)
 
 ## pangenomes
 
