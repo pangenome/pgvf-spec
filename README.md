@@ -232,5 +232,16 @@ Generic comments replace the line and field types with `*`.
 
 ## notes / todo
 
-*This document is a work in progress.*
+*This specification is a work in progress.*
 Comments, suggestions, and improvements are welcome.
+
+Provided consensus about its basic form, we will move to implement key required transformations via the `seqwish` graph induction kernel.
+Basic projections and manipulations of the graph can be implemented in a particular "tools" library.
+
+The representation of the PGVF depends heavily on walks, which we can represented efficiently in a dynamic form using `libbdsg` and other HandleGraph models, and in ultra-compact queryable form in the GBWT.
+
+An initial application of this approach is to layer small variants on base "consensus" pangenome reference graphs built by `minigraph` and `smoothxg`.
+
+The overlay graphs will allow us to use the hierarchical coordinate systems elaborated in rGFA while still representing dense, small variation.
+
+Although graph-to-graph alignment has been used to generate multiple sequence alignments (in the PO-POA algorithm), no current method supports the heuristic alignment of large sequence graphs.
