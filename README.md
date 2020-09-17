@@ -57,7 +57,9 @@ Our model describes variation between pangenome graphs, thus we call it the Pang
 <walk>     <- (<strand><nodeId>)+
 <pathId>   <- string
 <sampleId> <- string
-<hapId>    <- string
+<phaseId>  <- integer
+<seqId>    <- string
+<fragId>   <- integer
 <varId>    <- string
 <phaseId>  <- integer
 <segPos>   <- integer
@@ -71,7 +73,7 @@ Our model describes variation between pangenome graphs, thus we call it the Pang
 <L-line>   <- 'L' <strand><segId> <strand><segId> <tag>*
 <N-line>   <- 'N' <nodeId> <seq> <tag>*
 <E-line>   <- 'E' <strand><nodeId> <strand>nodeId> <tag>*
-<W-line>   <- 'W' <sampleId> <hapId> <phaseId> <walk> <tag>*
+<W-line>   <- 'W' <sampleId> <phaseId> <seqId> <fragId> <walk> <tag>*
 <A-line>   <- 'A' <segId> <segPos> <strand> <walkpos> <walk> <cigar> <tag>*
 <V-line>   <- 'V' <varId> <allele>+ (<sampleId>:<genotype>)* <tag>*
 <G-line>   <- 'G' <varId> <sampleId> <genotype> <tag>*
@@ -147,13 +149,14 @@ As with other features in PGVF, we represent these using walks through the graph
 ### walks (haplotype records)
 
 A haplotype record is stored in W, which lets us collect together and order a set of haplotypes related to one individual.
-Each W line has a numeric index describing where it sits in the given haplotype, allowing us to scaffold a collection of haplotypes together even if we cannot reconstruct them completely.
-Here, hap1 is unified, but hap2 breaks at the SNP and continues after.
+Each W line has a numeric index describing where it sits in the given phase set, allowing us to scaffold a collection of haplotypes together even if we cannot reconstruct them completely.
+Here, phase 0 on chrz is unified, but the second phase breaks at the SNP and continues after.
+Both haplotypes 
 
 ```
-W HG002 hap1 1 >1>3>4
-W HG002 hap2 1 >1
-W HG002 hap2 2 >4
+W HG002 0 chrz 0 >1>3>4
+W HG002 1 chrz 0 >1
+W HG002 1 chrz 1 >4
 N 1 GAT
 N 2 C
 N 3 T
