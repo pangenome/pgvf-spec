@@ -75,7 +75,7 @@ Our model describes variation between pangenome graphs, thus we call it the Pang
 <E-line>   <- 'E' <strand><nodeId> <strand>nodeId> <tag>*
 <W-line>   <- 'W' <sampleId> <phaseId> <seqId> <fragId> <walk> <tag>*
 <A-line>   <- 'A' <segId> <segPos> <strand> <walkpos> <walk> <cigar> <tag>*
-<V-line>   <- 'V' <varId> <allele>+ (<sampleId>:<genotype>)* <tag>*
+<V-line>   <- 'V' <varId> <allele>+ <tag>*
 <G-line>   <- 'G' <varId> <sampleId> <genotype> <tag>*
 <C-line>   <- 'C' ( '*' | 'S' | 'L' | 'N' | 'E' | 'W' | 'A' | 'V' | 'G' ) <tagId> '"'<comment>'"'
 ```
