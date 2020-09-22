@@ -151,7 +151,6 @@ As with other features in PGVF, we represent these using walks through the graph
 A haplotype record is stored in W, which lets us collect together and order a set of haplotypes related to one individual.
 Each W line has a numeric index describing where it sits in the given phase set, allowing us to scaffold a collection of haplotypes together even if we cannot reconstruct them completely.
 Here, phase 0 on chrz is unified, but the second phase breaks at the SNP and continues after.
-Both haplotypes 
 
 ```
 W HG002 0 chrz 0 >1>3>4
