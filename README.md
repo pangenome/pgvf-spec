@@ -183,7 +183,11 @@ ATGCGATCGATAAATAGAGTAG---GAATAGCA
 - `?3` indicates that we have a softclip of 3bp at the end of the mapping ("insertions" at the beginning and end of the query are treated as softclips)
 
 Using `=`, `+`, and `-` rather than `:`, `?`, and `_`, the matching sequences as well as sequences for insertions and deletions may be represented.
-If so, the previous example would become: `_3=CGATCG-ata=AATAGAGTAG+gtc=GAAT!at=GCA?3`
+If so, the previous example would become:
+
+```
+_3=CGATCG-ata=AATAGAGTAG+gtc=GAAT!at=GCA?3
+```
 
 
 ## Describing genomes in the graph: walks, alignments, and variants
