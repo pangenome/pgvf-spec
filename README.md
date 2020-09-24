@@ -1,6 +1,6 @@
 # Pangenome Graph Variation Format (PGVF)
 
-## pangenomes
+## Pangenomes
 
 Pangenomes represent the total genomic sequence of a collection of genomes of the same species or clade.
 Pangenome *models* allow us to understand the relationship between genomes and their component sequences in the context of the pangenome.
@@ -9,14 +9,14 @@ Pangenome *graphs* are representative graphical models of pangenomes.
 While pangenome graphs let us represent differences between genomes, we have no mechanism to represent *differences between pangenome graphs*, or to combine multiple pangenome graphs into one structure without losing information.
 This motivates the development of a new biological data format.
 
-## graph-to-graph mappings in PGVF
+## Graph-to-graph mappings in PGVF
 
 PGVF is a hard fork of the GFAv1 format that allows the description of graph-to-graph alignments.
 It represents a collection of aligned graphs as a network of walks through an underlying merged sequence graph.
 In principle, the structure of the underlying graph is unstable, while graphs mapped into it can always be extracted losslessly and are maintained across updates and modifications to the graph.
 Subsets and projections of PGVF into GFAv1 are trivial, but precise compatibility is avoided to avoid confusion and eliminate features of GFA that cause problems for pangenome graphs (such as overlaps).
 
-## approach
+## Approach
 
 Linear sequences are simple graphs, and their alignment to the graph is can be defined as a walk with edits.
 When they are perfectly embedded in the underlying graph, a pure walk through the nodes of the graph is sufficient to describe them.
@@ -28,7 +28,7 @@ It an be represented within a new graph as a set of sequence walks (S-records) c
 The addition of this additional link concept thus lets us express the alignment of graphs to each other by their mutual embedding in an underlying graph.
 PGVF thus represents collections of graph-to-graph mappings and any simple structures, including sequence-to-graph and sequence-to-sequence relationships.
 
-## purpose
+## Purpose
 
 Graph-to-graph mapping can describe a number of concepts that are important in pangenomics.
 A variable site is defined by set of walks representing its alleles, and genotypes over such alleles.
@@ -45,7 +45,7 @@ This specification defines such a format based on a collection of fixed record t
 
 Our model describes variation between pangenome graphs, thus we call it the Pangenome Graph Variation Format, or PGVF.
 
-## grammar
+## Grammar
 
 ```
 <pgvf>     <- <line>+
@@ -79,7 +79,7 @@ Our model describes variation between pangenome graphs, thus we call it the Pang
 <C-line>   <- 'C' ( '*' | 'S' | 'L' | 'N' | 'E' | 'W' | 'A' | 'V' | 'G' ) <tagId> '"'<comment>'"'
 ```
 
-## the base graph
+## The base graph
 
 The base graph is represented with `N` and `E` lines.
 It's conceptually the same as GFA, just using different letters and the `>` and `<` characters to represent node strands.
@@ -96,7 +96,7 @@ E >2 >4
 E >3 >4
 ```
 
-## overlay graphs
+## Overlay graphs
 
 The overlay graphs are very similar to GFAv1, and use the same characters for the same concepts (S=sequences, L=links).
 In PGVF, they represent stable coordinate and sequence systems projected into the base graph.
@@ -110,7 +110,7 @@ If the cigar is omitted, the walk is assumed to be pure.
 `L` records define links between the end of `S` records.
 These let us embed the full graph topology of the overlay within our base graph.
 
-### embedding an overlay graph
+### Embedding an overlay graph
 
 This overlay is itself a valid graph, but it has not been mapped into a base graph.
 
@@ -153,7 +153,7 @@ Because the `S` records can be reconstructed by walking through the base graph, 
 But, we've left ctg6 out of the base graph, representing it with a walk and a cigar.
 The particular format of the cigar allows us to indicate the starting position of the alignment on the target walk and the sequence of the `S`-line.
 
-## PGVF cigars
+## CIGARs
 
 Alignment descriptions are used in several parts of PGVF to represent differences from the base or overlay graphs.
 They have a particular set of features that distinguish them from several other implementations.
@@ -186,14 +186,14 @@ Using `=`, `+`, and `-` rather than `:`, `?`, and `_`, the matching sequences as
 If so, the previous example would become: `_3=CGATCG-ata=AATAGAGTAG+gtc=GAAT!at=GCA?3`
 
 
-## walks, alignments, and variants
+## Describing genomes in the graph: walks, alignments, and variants
 
 Pangenome graphs have unique applications that differ from assembly graphs.
 If they serve as a reference data structure, we will use them to compare other samples to each other.
 This encourages us to define variation across alleles, and phased haplotypes through those variable sites.
 As with other features in PGVF, we represent these using walks through the graph.
 
-### walks (haplotype records)
+### Walks (haplotypes)
 
 A haplotype record is stored in W, which lets us collect together and order a set of haplotypes related to one individual.
 Each `W`-line has a numeric index describing where it sits in the given phase set, allowing us to scaffold a collection of haplotypes together even if we cannot reconstruct them completely.
@@ -215,7 +215,7 @@ E >2 >4
 E >3 >4
 ```
 
-### alignments
+### Alignments
 
 Alignments (`A`-lines) provide a flexible way to describe the mapping between a sequence and the graph.
 Unlike `S`-lines, they allow us to represent multiple alignments.
@@ -259,7 +259,7 @@ E >2 >4
 E >3 >4
 ```
 
-### variants and genotypes
+### Variants and Genotypes
 
 Variable sites collect mutually-exclusive alleles across a locus in the pangenome.
 Optional genotype records provide a method to describe 
@@ -281,7 +281,7 @@ It merely defines the allele scope for a set of genotype calls.
 
 In the current form of this specification, phase blocks should be represented with `W`-lines, but future updates may allow `G`-lines to represent phase.
 
-### comments
+### Comments
 
 Inline comments allow us to describe the meaning of tags for given line types.
 For instance, this comment might explain the variant call set in the previous example:
@@ -296,7 +296,7 @@ C G rd:i "median read depth over bases in the locus"
 Because tags define their type, this is not necessary for parsing, and is optional.
 Generic comments replace the line and field types with `*`.
 
-## notes / todo
+## Notes / TODO
 
 *This specification is a work in progress.*
 Comments, suggestions, and improvements are welcome.
