@@ -177,7 +177,7 @@ ATGCGATCGATAAATAGAGTAG---GAATAGCA
 
 - `_3` indicates that we start at offset=3 (the fourth position) in the target sequence ("deletions" at the beginning of the target are treated as offsets)
 - `:[0-9]+` represents an identical block
-- `_3` represents a deltion
+- `_3` represents a deletion
 - `+gtc` an insertion
 - `!at` indicates reference base A is substituted with a query base T
 - `?3` indicates that we have a softclip of 3bp at the end of the mapping ("insertions" at the beginning and end of the query are treated as softclips)
