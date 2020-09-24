@@ -14,19 +14,57 @@ This motivates the development of a new biological data format.
 PGVF is a hard fork of the GFAv1 format that allows the description of graph-to-graph alignments.
 It represents a collection of aligned graphs as a network of walks through an underlying merged sequence graph.
 In principle, the structure of the underlying graph is unstable, while graphs mapped into it can always be extracted losslessly and are maintained across updates and modifications to the graph.
-Subsets and projections of PGVF into GFAv1 are trivial, but precise compatibility is avoided to avoid confusion and eliminate features of GFA that cause problems for pangenome graphs (such as overlaps).
+Subsets and projections of PGVF into GFAv1 are trivial, but precise compatibility is avoid confusion and eliminate features of GFA that cause problems for pangenome graphs (such as overlaps).
 
-## Approach
-
-Linear sequences are simple graphs, and their alignment to the graph is can be defined as a walk with edits.
-When they are perfectly embedded in the underlying graph, a pure walk through the nodes of the graph is sufficient to describe them.
-Their embedding makes their relationship to other embedded paths precise.
-(We can already represent these in GFAv1.)
+## High-level approach
 
 A sequence graph is a collection of sequences and links between their ends.
-It an be represented within a new graph as a set of sequence walks (S-records) connected by a special type of graph edge (a L-record "link" in PGVF).
-The addition of this additional link concept thus lets us express the alignment of graphs to each other by their mutual embedding in an underlying graph.
-PGVF thus represents collections of graph-to-graph mappings and any simple structures, including sequence-to-graph and sequence-to-sequence relationships.
+In PGVF, we represent two kinds of graphs.
+
+### The base graph
+
+One graph, represented with numeric identifiers, is the "base" graph.
+We store it with `N`-line nodes and `E`-line edges.
+The base graph coordinates the alignment between other "overlay" graphs.
+
+### Overlay graphs
+
+Overlay graphs are represented with `S`-line sequence segments and `L`-line links between their ends.
+They use string identifiers for segments.
+Each `S`-line can be described as a sequence and / or a walk through the base graphs which may have edits.
+They thus allow us to represent any genomic sequence, contig, haplotype, or allele, with optional variation against the base graph.
+
+### Walks with edits
+
+Walks through the PGVF are represented as series of ordered node ids or segment ids.
+In allowing walks to traverse segments with unique variation, they may thus represent variation against the base graph.
+Segment ids may represent common alleles or haplotypes, providing compression and intelligibility to the walk representation in PGVF.
+
+### ε-approximate pangenome graphs
+
+As pangenomes grow, they tend to saturate with low-frequency variation.
+Storing information about low-frequency variation in the base graph is expensive, as it can require O(N) bits to include each new variant found in a graph with N sequences.
+For many operations of pangenome graphs, we can ignore this low-frequency variation.
+
+In PGVF, any walk through the pangenome may be described using edit-contiaining overlay graphs (specifically `S`-lines).
+This allows us to shift variant information from the base graph, where it is represented in all paths traversing the variant locus, into an overlay referred to by only a subset of the samples.
+
+The amount of information stored in these overlays can be understood as the representation error ε, or amount of error in our mapping of overlays onto the "base" graph.
+At ε=0, all walks and `S`-lines are perfectly embedded in the base graph defined by `N`-lines and `E`-lines.
+When ε>0, some walks and segments contain edits defined in cigars.
+We might discard these for some applications, but by retaining them we can rebuild an ε=0 graph.
+
+### Compact representation of variation
+
+A variable site may be defined by a collection of walks through the graph, each of which is an allele found in the variable site (`V`-line).
+Genotypes across the site are multisets of alleles, with one per sample relevant to the site (`G`-line)
+If our graph is ε-approximate, and ε is small, we might represent the vast majority of haplotypes without reference to any genotypes.
+Genotypes provide clean mechanism to record and operate on novel variants found in new samples mapped to the graph, or low-frequency sites in samples in the graph where we lack phasing.
+
+### Alignments and multiple mapping
+
+Although `S`-lines can be understood as a mapping, they are intended to be single mappings against the graph.
+To represent multiple mappings between a `S`-line and other elements of the PGVF, we can use specialized `A`-lines that 
 
 ## Purpose
 
